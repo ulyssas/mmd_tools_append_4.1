@@ -50,7 +50,7 @@ def sanitize_path_fragment(path_fragment: str) -> str:
 
 
 def import_from_file(module_name: str, module_path: str):
-    module_name = f"bl_ext.blender_org.mmd_tools_append.{module_name}"
+    module_name = f"mmd_tools_append.{module_name}"
     spec = importlib.util.spec_from_file_location(module_name, module_path)
     if spec is None or spec.loader is None:
         raise ImportError(f"Cannot load module '{module_name}' from '{module_path}'")
@@ -61,21 +61,8 @@ def import_from_file(module_name: str, module_path: str):
     return module
 
 
-def is_mmd_tools_installed():
-    candidates = (
-        "bl_ext.blender_org.mmd_tools",
-        "bl_ext.user_default.mmd_tools",
-        "bl_ext.vscode_development.mmd_tools",
-    )
-
-    for name in candidates:
-        try:
-            if name in sys.modules or importlib.util.find_spec(name) is not None:
-                return True
-        except:
-            pass
-
-    return False
+def is_mmd_tools_installed() -> bool:
+    return importlib.util.find_spec("mmd_tools") is not None
 
 
 _MMD_TOOLS_CACHE = None
@@ -90,19 +77,11 @@ def import_mmd_tools():
     if _MMD_TOOLS_CACHE is not None:
         return _MMD_TOOLS_CACHE
 
-    candidates = (
-        "bl_ext.blender_org.mmd_tools",
-        "bl_ext.user_default.mmd_tools",
-        "bl_ext.vscode_development.mmd_tools",
-    )
-
     import_exc = None
-    for name in candidates:
-        try:
-            _MMD_TOOLS_CACHE = importlib.import_module(name)
-            break
-        except Exception as e:
-            import_exc = e
+    try:
+        _MMD_TOOLS_CACHE = importlib.import_module("mmd_tools")
+    except Exception as e:
+        import_exc = e
 
     if _MMD_TOOLS_CACHE is None:
         raise RuntimeError(_("MMD Tools is not installed correctly. Please install MMD Tools using the correct steps, as MMD Tools Append depends on MMD Tools.")) from import_exc

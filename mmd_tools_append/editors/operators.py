@@ -20,6 +20,7 @@ class SetupRenderEngineForEevee(bpy.types.Operator):
     bl_description = "Setup render engine properties for Eevee."
     bl_options = {"REGISTER", "UNDO"}
 
+    use_bloom: bpy.props.BoolProperty(name="Use Bloom", default=True)
     use_motion_blur: bpy.props.BoolProperty(name="Use Motion Blur", default=False)
     film_transparent: bpy.props.BoolProperty(name="Use Film Transparent", default=False)
 
@@ -28,11 +29,8 @@ class SetupRenderEngineForEevee(bpy.types.Operator):
         return True
 
     def execute(self, context):
-        if context.scene.render.engine not in ["BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"]:
-            try:
-                context.scene.render.engine = "BLENDER_EEVEE_NEXT"
-            except TypeError:
-                context.scene.render.engine = "BLENDER_EEVEE"
+        if context.scene.render.engine != "BLENDER_EEVEE":
+            context.scene.render.engine = "BLENDER_EEVEE"
 
         eevee = context.scene.eevee
 
@@ -42,33 +40,53 @@ class SetupRenderEngineForEevee(bpy.types.Operator):
         # > Viewport: 8
         eevee.taa_samples = 16
 
+        # Ambient Occlusion: enable
+        eevee.use_gtao = True
+        # > Distance: 0.1 m
+        eevee.gtao_distance = 0.100
+
+        # Bloom: enable
+        eevee.use_bloom = self.use_bloom
+        if self.use_bloom:
+            # > Threshold: 1.000
+            eevee.bloom_threshold = 1.000
+            # > Intensity: 0.100
+            eevee.bloom_intensity = 0.100
+
         # Depth of Field
         # > Max Size: 16 px
         eevee.bokeh_max_size = 16.000
 
+        # Screen Space Reflections: enable
+        eevee.use_ssr = True
+        # > Refrection: enable
+        eevee.use_ssr_refraction = True
+        # > Edge Fading: 0.000
+        eevee.ssr_border_fade = 0.075
+
         # Motion Blur
-        context.scene.render.use_motion_blur = self.use_motion_blur
+        eevee.use_motion_blur = self.use_motion_blur
 
-        # Shadows: True
-        eevee.use_shadows = True
+        # Shadows
+        # > Cube Size 1024 px
+        eevee.shadow_cube_size = "1024"
+        # > Cascade Size 2048 px
+        eevee.shadow_cascade_size = "2048"
+        # > Soft Shadows: True
+        eevee.use_soft_shadows = True
 
-        # Ray-tracing: True
-        eevee.use_raytracing = True
-
-        # Ambient Occlusion: enable (Fast GI with AO mode)
-        eevee.use_fast_gi = True
-        eevee.fast_gi_method = "AMBIENT_OCCLUSION_ONLY"
-        # > Distance: 0.1 m
-        eevee.fast_gi_distance = 0.100
+        # Indirect lighting: enable
+        # > Irradiance Smoothing: 0.50
+        eevee.gi_irradiance_smoothing = 0.50
 
         # Film > Transparent
         context.scene.render.film_transparent = self.film_transparent
 
         # Color Management
         # > View Transform: Filmic
-        context.scene.view_settings.view_transform = "AgX"
+        context.scene.view_settings.view_transform = "Filmic"
         # > Look: High Contrast
-        context.scene.view_settings.look = "AgX - High Contrast"
+        context.scene.view_settings.look = "High Contrast"
 
         return {"FINISHED"}
 
@@ -79,8 +97,9 @@ class SetupRenderEngineForToonEevee(bpy.types.Operator):
     bl_description = "Setup render engine properties for Toon Eevee."
     bl_options = {"REGISTER", "UNDO"}
 
+    use_bloom: bpy.props.BoolProperty(name="Use Bloom", default=True)
     use_motion_blur: bpy.props.BoolProperty(name="Use Motion Blur", default=False)
-    use_shadows: bpy.props.BoolProperty(name="Use Shadow", default=True)
+    use_soft_shadows: bpy.props.BoolProperty(name="Use Soft Shadows", default=True)
     film_transparent: bpy.props.BoolProperty(name="Use Film Transparent", default=False)
 
     @classmethod
@@ -88,11 +107,8 @@ class SetupRenderEngineForToonEevee(bpy.types.Operator):
         return True
 
     def execute(self, context):
-        if context.scene.render.engine not in ["BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"]:
-            try:
-                context.scene.render.engine = "BLENDER_EEVEE_NEXT"
-            except TypeError:
-                context.scene.render.engine = "BLENDER_EEVEE"
+        if context.scene.render.engine != "BLENDER_EEVEE":
+            context.scene.render.engine = "BLENDER_EEVEE"
 
         eevee = context.scene.eevee
 
@@ -102,18 +118,44 @@ class SetupRenderEngineForToonEevee(bpy.types.Operator):
         # > Viewport: 8
         eevee.taa_samples = 8
 
+        # Ambient Occlusion: enable
+        eevee.use_gtao = True
+        # > Distance: 0.1 m
+        eevee.gtao_distance = 0.100
+
+        # Bloom: enable
+        eevee.use_bloom = self.use_bloom
+        if self.use_bloom:
+            # > Threshold: 1.000
+            eevee.bloom_threshold = 1.000
+            # > Intensity: 0.100
+            eevee.bloom_intensity = 0.100
+
         # Depth of Field
         # > Max Size: 16 px
         eevee.bokeh_max_size = 16.000
 
+        # Screen Space Reflections: enable
+        eevee.use_ssr = True
+        # > Refrection: enable
+        eevee.use_ssr_refraction = True
+        # > Edge Fading: 0.000
+        eevee.ssr_border_fade = 0.075
+
         # Motion Blur
-        context.scene.render.use_motion_blur = self.use_motion_blur
+        eevee.use_motion_blur = self.use_motion_blur
 
-        # Shadows: True
-        eevee.use_shadows = self.use_shadows
+        # Shadows
+        # > Cube Size 1024 px
+        eevee.shadow_cube_size = "1024"
+        # > Cascade Size 2048 px
+        eevee.shadow_cascade_size = "2048"
+        # > Soft Shadows
+        eevee.use_soft_shadows = self.use_soft_shadows
 
-        # Ray-tracing: False (old eevee look)
-        eevee.use_raytracing = False
+        # Indirect lighting: enable
+        # > Irradiance Smoothing: 0.50
+        eevee.gi_irradiance_smoothing = 0.50
 
         # Film > Transparent
         context.scene.render.film_transparent = self.film_transparent
@@ -424,8 +466,7 @@ class SelectMovedPoseBones(bpy.types.Operator):
                 if is_not_rotated and is_not_translated and is_not_scaled:
                     continue
 
-                # this works on 4.x because of MMD Tools
-                pose_bone.select = True
+                pose_bone.bone.select = True
 
         return {"FINISHED"}
 

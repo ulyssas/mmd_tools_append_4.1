@@ -71,7 +71,6 @@ class OperatorPanel(bpy.types.Panel):
 
         if not is_mmd_tools_installed():
             layout.label(text="MMD Tools is not installed.", icon="ERROR")
-            layout.operator(InstallMMDTools.bl_idname, icon="IMPORT")
             return
 
         col = layout.column(align=True)
