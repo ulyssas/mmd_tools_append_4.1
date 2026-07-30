@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+*"
 
 name: Release
 
@@ -9,7 +9,6 @@ jobs:
   release:
     # Note: `github.event.base_ref` is equal to `refs/heads/main` when the workflow is triggered
     # by a branch, or a lightweight tag (_not_ an annotated tag), placed on the last commit of the `main` branch
-    if: github.event.base_ref == 'refs/heads/main'
 
     runs-on: ubuntu-latest
 
@@ -52,7 +51,7 @@ jobs:
         run: |
           declare -A tag_prefix_to_blender_version=(
             ["v1"]="bl3.6"
-            ["v4"]="bl4.2"
+            ["v4"]="bl4.1"
           )
           blender_version=${tag_prefix_to_blender_version[${GITHUB_REF_NAME%%.*}]}
           if [ -z "$blender_version" ]; then
@@ -64,9 +63,8 @@ jobs:
       - name: Create a zip
         run: |
           (
-            cd mmd_tools_append &&
-            find . -type f ! -path "*/.*" ! -path "*/__pycache__/*" -print |
-            zip -9r "../${{ env.zip_filename }}" -@
+            find mmd_tools_append -type f ! -path "*/.*" ! -path "*/__pycache__/*" -print |
+            zip -9r "${{ env.zip_filename }}" -@
           )
 
       - name: Create a Release
