@@ -19,8 +19,24 @@ import traceback
 
 from . import auto_load
 
+bl_info = {
+    "name": "mmd_tools_append",
+    "description": "Utility tools for MMD model & scene editing by Uuu(/>ω<)/Nyaa!.",
+    "author": "UuuNyaa",
+    "version": (4, 5, 12),
+    "blender": (4, 0, 0),
+    "warning": "",
+    "location": "View3D > Sidebar > MMD Tools Panel",
+    "wiki_url": "https://github.com/MMD-Blender/blender_mmd_tools_append/wiki",
+    "tracker_url": "https://github.com/MMD-Blender/blender_mmd_tools_append/issues",
+    "support": "COMMUNITY",
+    "category": "Object",
+}
+
 PACKAGE_PATH = os.path.dirname(__file__)
 PACKAGE_NAME = __package__
+
+MAX_SUPPORTED_VERSION = (4, 1, 99)
 
 REGISTER_HOOKS = []
 UNREGISTER_HOOKS = []
@@ -30,6 +46,9 @@ auto_load.init(PACKAGE_NAME)
 
 def register():
     import bpy
+
+    if bpy.app.version > MAX_SUPPORTED_VERSION:
+        raise RuntimeError(f"This addon only supports up to Blender 4.1.x. Your Blender version ({bpy.app.version_string}) is too new.")
 
     auto_load.register()
 
