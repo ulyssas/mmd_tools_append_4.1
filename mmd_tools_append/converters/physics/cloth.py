@@ -403,6 +403,11 @@ class ConvertRigidBodyToClothOperator(bpy.types.Operator):
         items=[(m.name, m.value, "") for m in PhysicsMode],
         default=PhysicsMode.AUTO.name,
     )
+    clean_bones: bpy.props.BoolProperty(
+        name="Clean Bones",
+        description="Fix physics bones for conversion",
+        default=True,
+    )
     extend_ribbon_area: bpy.props.BoolProperty(name="Extend Ribbon Area", default=True)
 
     @classmethod
@@ -466,6 +471,7 @@ class ConvertRigidBodyToClothOperator(bpy.types.Operator):
                 self.ribbon_stiffness,
                 PhysicsMode[self.physics_mode],
                 self.extend_ribbon_area,
+                self.clean_bones,
             )
 
         except MessageException as ex:
