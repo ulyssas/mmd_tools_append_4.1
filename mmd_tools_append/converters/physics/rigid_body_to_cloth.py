@@ -62,8 +62,7 @@ class RigidBodyToClothConverter:
         mmd_mesh_object = mesh_objects[0]
         mmd_armature_object = mmd_model.armature()
 
-        rigid_bodys_count = len(rigid_body_objects)
-        rigid_body_index_dict = {rigid_body_objects[i]: i for i in range(rigid_bodys_count)}
+        rigid_body_index_dict = {rb: i for i, rb in enumerate(rigid_body_objects)}
 
         pose_bones: List[bpy.types.PoseBone] = []
         for rigid_body_object in rigid_body_objects:
@@ -82,11 +81,15 @@ class RigidBodyToClothConverter:
 
         remove_objects(joint_objects)
 
-        cloth_mesh = bpy.data.meshes.new("physics_cloth")
+        rb_name = rigid_body_objects[0].name
+        cloth_suffix = rb_name.split("_", 1)[1] if "_" in rb_name else rb_name
+
+        # The cloth mesh "skeleton"
+        cloth_mesh = bpy.data.meshes.new(f"physics_cloth_{cloth_suffix}")
         cloth_mesh.from_pydata([r.location for r in rigid_body_objects], joint_edge_indices, [])
         cloth_mesh.validate()
 
-        cloth_mesh_object = bpy.data.objects.new("physics_cloth", cloth_mesh)
+        cloth_mesh_object = bpy.data.objects.new(f"physics_cloth_{cloth_suffix}", cloth_mesh)
         cloth_mesh_object.parent = mmd_model.clothGroupObject()
         cloth_mesh_object.hide_render = True
         cloth_mesh_object.display_type = "WIRE"
@@ -239,15 +242,13 @@ class RigidBodyToClothConverter:
                 pin_rigid_body = obj.rigid_body_constraint.object1
 
             index1 = rigid_body_index_dict[side_rigid_body]
+            pin_index = [index1]
             vert2 = new_up_verts[index1]
-            if vert2 is None:
-                pin_index = [index1]
-            else:
-                vert3 = new_side_verts[vert2.index]
-                if vert3 is None:
-                    pin_index = [vert2.index]
-                else:
-                    pin_index = [vert2.index, vert3.index]
+            if vert2 is not None:
+                pin_index = [vert2.index]
+                if new_side_verts and new_side_verts[vert2.index] is not None:
+                    vert3 = new_side_verts[vert2.index]
+                    pin_index.append(vert3.index)
 
             pin_bone_name = pin_rigid_body.mmd_rigid.bone
 
@@ -282,6 +283,7 @@ class RigidBodyToClothConverter:
         new_side_verts: List[Optional[bmesh.types.BMVert]] = [None for i in range(len(cloth_bm.verts))]
 
         for vert in vertices.side_verts:
+            new_location = None
             for edge in vert.link_edges:
                 if edge not in edges.side_edges:
                     if edge.verts[0] == vert:
@@ -289,8 +291,9 @@ class RigidBodyToClothConverter:
                     else:
                         new_location = vert.co * 2 - edge.verts[0].co
                     break
-            new_vert = cloth_bm.verts.new(new_location, vert)
-            new_side_verts[vert.index] = new_vert
+            if new_location is not None:
+                new_vert = cloth_bm.verts.new(new_location, vert)
+                new_side_verts[vert.index] = new_vert
 
         return new_side_verts
 
@@ -438,9 +441,7 @@ class RigidBodyToClothConverter:
             bone = pose_bones[vert.index]
             if bone.parent not in pose_bones:
                 vertices.up_verts.add(vert)
-            elif len(bone.children) == 0:
-                vertices.down_verts.add(vert)
-            elif bone.children[0] not in pose_bones:
+            elif len(bone.children) == 0 or bone.children[0] not in pose_bones:
                 vertices.down_verts.add(vert)
 
             if vert in vertices.ribbon_verts and physics_mode == PhysicsMode.AUTO or physics_mode == PhysicsMode.BONE_CONSTRAINT:
