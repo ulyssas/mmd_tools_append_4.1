@@ -274,10 +274,11 @@ class DissolveWeightBone(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
 
     def execute(self, context):
-        for obj in context.selected_objects:
-            if obj.type != "ARMATURE":
-                continue
+        armature_objects = [obj for obj in context.objects_in_mode if obj.type == "ARMATURE"]
+        if not armature_objects and context.active_object and context.active_object.type == "ARMATURE":
+            armature_objects = [context.active_object]
 
+        for obj in armature_objects:
             editor = ArmatureEditor(obj)
             selected_bones = [b for b in editor.edit_bones if b and b.select]
 

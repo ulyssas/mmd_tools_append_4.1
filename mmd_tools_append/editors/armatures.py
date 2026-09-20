@@ -398,6 +398,9 @@ class ArmatureEditor(EditBoneEditor, PoseBoneEditor):
         self.raw_armature.use_mirror_x = False
 
         parent = target.parent
+        if not parent:
+            return
+
         parent.tail = target.tail
         target_name = target.name
         self.edit_bones.remove(target)
