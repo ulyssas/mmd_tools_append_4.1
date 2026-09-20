@@ -539,6 +539,14 @@ msgstr ""
 msgid "Select both the mesh to be deformed and the rigid body"
 msgstr "选择要变形的网格和刚体"
 
+#. :src: bpy.types.MMD_TOOLS_APPEND_OT_convert_rigid_body_to_cloth.clean_bones
+msgid "Clean Bones"
+msgstr ""
+
+#. :src: bpy.types.MMD_TOOLS_APPEND_OT_convert_rigid_body_to_cloth.clean_bones
+msgid "Fix physics bones for conversion"
+msgstr ""
+
 #. :src: bpy.types.MMD_TOOLS_APPEND_OT_convert_rigid_body_to_cloth.extend_ribbon_area
 msgid "Extend Ribbon Area"
 msgstr "扩展丝带区域"

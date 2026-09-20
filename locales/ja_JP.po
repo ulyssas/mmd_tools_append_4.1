@@ -539,6 +539,14 @@ msgstr "ピラミッドメッシュをクロスシミュレーションに変換
 msgid "Select both the mesh to be deformed and the rigid body"
 msgstr "変形対象メッシュとリジッドボディの両方を選択"
 
+#. :src: bpy.types.MMD_TOOLS_APPEND_OT_convert_rigid_body_to_cloth.clean_bones
+msgid "Clean Bones"
+msgstr "ボーンを整理"
+
+#. :src: bpy.types.MMD_TOOLS_APPEND_OT_convert_rigid_body_to_cloth.clean_bones
+msgid "Fix physics bones for conversion"
+msgstr "変換用に物理ボーンを修正します"
+
 #. :src: bpy.types.MMD_TOOLS_APPEND_OT_convert_rigid_body_to_cloth.extend_ribbon_area
 msgid "Extend Ribbon Area"
 msgstr "リボンエリア拡張"
