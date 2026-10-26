@@ -4,6 +4,7 @@
 import os
 
 import bpy
+from bpy.app.translations import pgettext as _
 
 from ..utilities import get_preferences
 from .assets import ASSETS, AssetUpdater
@@ -57,7 +58,7 @@ class DeleteDebugAssetJson(bpy.types.Operator):
 
     def execute(self, context):
         if not AssetUpdater.delete_assets_json(self.delete_json):
-            self.report(type={"INFO"}, message=f"{self.delete_json} does not exist.")
+            self.report(type={"INFO"}, message=_("{delete_json} does not exist.").format(delete_json=self.delete_json))
             return {"CANCELLED"}
 
         return {"FINISHED"}

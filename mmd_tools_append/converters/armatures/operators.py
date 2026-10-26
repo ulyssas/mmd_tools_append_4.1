@@ -94,7 +94,7 @@ class MMDArmatureAddMetarig(bpy.types.Operator):
             return {"FINISHED"}
 
         except KeyError as e:
-            self.report(type={"ERROR"}, message=f"This armature does not have required MMD bone: {e}")
+            self.report(type={"ERROR"}, message=_("This armature does not have required MMD bone: {e}").format(e=e))
             return {"CANCELLED"}
 
 
@@ -447,13 +447,13 @@ class MMDRigifyDerigger(bpy.types.Operator):
 
             if collisions:
                 for orig_name, bone_name in collisions:
-                    self.report({"WARNING"}, message=f"Bone {orig_name} was renamed to {bone_name}.")
-                self.report({"WARNING"}, message=f"Removed {removed_count} bones with {len(collisions)} collisions. (click to see details)")
+                    self.report({"WARNING"}, message=_("Bone {orig_name} was renamed to {bone_name}.").format(orig_name=orig_name, bone_name=bone_name))
+                self.report({"WARNING"}, message=_("Removed {removed_count} bones with {collisions} collisions. (click to see details)").format(removed_count=removed_count, collisions=len(collisions)))
             else:
-                self.report({"INFO"}, message=f"Removed {removed_count} bones.")
+                self.report({"INFO"}, message=_("Removed {removed_count} bones.").format(removed_count=removed_count))
 
         except Exception as e:
-            self.report({"ERROR"}, message=f"Failed to remove rig: {e}")
+            self.report({"ERROR"}, message=_("Failed to remove rig: {e}").format(e=e))
             return {"CANCELLED"}
         finally:
             bpy.ops.object.mode_set(mode=previous_mode)
@@ -487,10 +487,10 @@ class MMDRigifyTranslator(bpy.types.Operator):
 
             bpy.ops.object.mode_set(mode="EDIT")
             translated_count = rigify_armature_object.translate_rigify()
-            self.report({"INFO"}, message=f"Translated {translated_count} bones.")
+            self.report({"INFO"}, message=_("Translated {translated_count} bones.").format(translated_count=translated_count))
 
         except Exception as e:
-            self.report({"ERROR"}, message=f"Failed to translate bones: {e}")
+            self.report({"ERROR"}, message=_("Failed to translate bones: {e}").format(e=e))
             return {"CANCELLED"}
         finally:
             bpy.ops.object.mode_set(mode=previous_mode)
@@ -824,7 +824,7 @@ class HumanoidRenameOperator(bpy.types.Operator):
             dups = editor.tree.get_duplicates()
             if dups:
                 for k, v in dups.items():
-                    self.report({"WARNING"}, message=f"Bone {k} was selected {v} times.")
+                    self.report({"WARNING"}, message=_("Bone {k} was selected {v} times.").format(k=k, v=v))
 
             bpy.ops.object.mode_set(mode="EDIT")
             rename_count = editor.rename()
@@ -850,11 +850,11 @@ class HumanoidRenameOperator(bpy.types.Operator):
                 bpy.ops.mmd_tools.fix_bone_order()
 
             if dups:
-                self.report({"WARNING"}, message=f"Renamed {rename_count} bones with {len(dups)} duplicates. (click to see details)")
+                self.report({"WARNING"}, message=_("Renamed {rename_count} bones with {dups} duplicates. (click to see details)").format(rename_count=rename_count, dups=len(dups)))
             else:
-                self.report({"INFO"}, message=f"Renamed {rename_count} bones.")
+                self.report({"INFO"}, message=_("Renamed {rename_count} bones.").format(rename_count=rename_count))
         except KeyError as e:
-            self.report(type={"ERROR"}, message=f"This armature does not have required MMD bones. {e}")
+            self.report(type={"ERROR"}, message=_("This armature does not have required MMD bone: {e}").format(e=e))
             return {"CANCELLED"}
         except MessageException as ex:
             self.report(type={"ERROR"}, message=str(ex))

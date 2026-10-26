@@ -6,6 +6,7 @@ import re
 import unicodedata
 
 import bpy
+from bpy.app.translations import pgettext as _
 
 from ..converters.armatures.humanoid import HumanoidEditor
 from ..utilities import import_mmd_tools
@@ -206,7 +207,7 @@ class AddMMDHumanoidRig(bpy.types.Operator):
             bpy.ops.mmd_tools.fix_bone_order()
 
         except Exception as e:
-            self.report({"ERROR"}, message=f"Failed to add MMD rig: {e}")
+            self.report({"ERROR"}, message=_("Failed to add MMD rig: {e}").format(e=e))
             return {"CANCELLED"}
         finally:
             bpy.ops.object.mode_set(mode=previous_mode)
