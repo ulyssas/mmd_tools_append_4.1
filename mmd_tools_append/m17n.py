@@ -66,10 +66,10 @@ translations_tuple = (
         ("zh_HANS", "资产提取根文件夹", (False, ())),
     ),
     (
-        ("*", "Path to extract the cached assets"),
+        ("*", "Path to extract the cached assets. It will be used as Asset Library as well"),
         (("bpy.types.MMDToolsAppendAddonPreferences.asset_extract_root_folder",), ()),
-        ("ja_JP", "キャッシュしたアセットの展開パス", (False, ())),
-        ("zh_HANS", "提取缓存资产的路径", (False, ())),
+        ("ja_JP", "キャッシュしたアセットの展開パス. アセットライブラリにも使われます", (False, ())),
+        ("zh_HANS", "提取缓存资产的路径. 也将用作资产库", (False, ())),
     ),
     (
         ("*", "Asset JSON Auto Update on Startup"),
@@ -548,6 +548,12 @@ translations_tuple = (
         (("bpy.types.MMD_TOOLS_APPEND_OT_stretch_bone_to_vertex", "bpy.types.MMD_TOOLS_APPEND_OT_stretch_bone_to_vertex", "extensions/user_default/mmd_tools_append/panels.py:205"), ()),
         ("ja_JP", "ボーンを頂点にストレッチ", (False, ())),
         ("zh_HANS", "拉伸骨骼到顶点", (False, ())),
+    ),
+    (
+        ("Operator", "Sync to Asset Library"),
+        (("bpy.types.MMD_TOOLS_APPEND_OT_sync_asset_library", "bpy.types.MMD_TOOLS_APPEND_OT_sync_asset_library"), ()),
+        ("ja_JP", "アセットライブラリに同期", (False, ())),
+        ("zh_HANS", "", (False, ())),
     ),
     (
         ("Operator", "Tune Geometry Nodes"),
@@ -1658,7 +1664,7 @@ translations_tuple = (
     (
         ("*", "Failed to invoke mmd_tools\nPlease install mmd_tools."),
         (("extensions/user_default/mmd_tools_append/asset_search/actions.py:361", "extensions/user_default/mmd_tools_append/asset_search/actions.py:373", "extensions/user_default/mmd_tools_append/asset_search/actions.py:389"), ()),
-        ("ja_JP", "mmd_toolsの呼び出しに失敗しました\nmmd_toolsをインストールしてください.", (False, ())),
+        ("ja_JP", "mmd_toolsの呼び出しに失敗しました\nmmd_toolsをインストールしてください。", (False, ())),
         ("zh_HANS", "", (False, ())),
     ),
     (
@@ -1698,9 +1704,21 @@ translations_tuple = (
         ("zh_HANS", "材质", (False, ())),
     ),
     (
+        ("*", "Finished syncing to Asset Library."),
+        (("extensions/user_default/mmd_tools_append/asset_search/operators.py:127",), ()),
+        ("ja_JP", "アセットライブラリに同期しました。", (False, ())),
+        ("zh_HANS", "", (False, ())),
+    ),
+    (
         ("*", " does not exist."),
         (("extensions/user_default/mmd_tools_append/asset_search/operators.py:57",), ()),
         ("ja_JP", "", (False, ())),
+        ("zh_HANS", "", (False, ())),
+    ),
+    (
+        ("*", "No extracted assets found to sync."),
+        (("extensions/user_default/mmd_tools_append/asset_search/operators.py:86",), ()),
+        ("ja_JP", "展開されたアセットが見つかりませんでした。", (False, ())),
         ("zh_HANS", "", (False, ())),
     ),
     (
@@ -2213,7 +2231,7 @@ translations_tuple = (
     (
         ("*", "Reset Humanoid data."),
         (("extensions/user_default/mmd_tools_append/converters/armatures/operators.py:665",), ()),
-        ("ja_JP", "ヒューマノイドをリセットしました", (False, ())),
+        ("ja_JP", "ヒューマノイドをリセットしました。", (False, ())),
         ("zh_HANS", "", (False, ())),
     ),
     (
@@ -2223,8 +2241,20 @@ translations_tuple = (
         ("zh_HANS", "", (False, ())),
     ),
     (
-        ("*", "Failed to remove rig: "),
+        ("*", "Removed  bones with  collisions. (click to see details)"),
         (("extensions/user_default/mmd_tools_append/converters/armatures/operators.py:451",), ()),
+        ("ja_JP", "", (False, ())),
+        ("zh_HANS", "", (False, ())),
+    ),
+    (
+        ("*", "Removed  bones."),
+        (("extensions/user_default/mmd_tools_append/converters/armatures/operators.py:453",), ()),
+        ("ja_JP", "", (False, ())),
+        ("zh_HANS", "", (False, ())),
+    ),
+    (
+        ("*", "Failed to remove rig: "),
+        (("extensions/user_default/mmd_tools_append/converters/armatures/operators.py:456",), ()),
         ("ja_JP", "リグの除去に失敗しました: ", (False, ())),
         ("zh_HANS", "", (False, ())),
     ),
@@ -2255,7 +2285,7 @@ translations_tuple = (
     (
         ("*", "Failed to invoke Rigify\nPlease enable Rigify add-on."),
         (("extensions/user_default/mmd_tools_append/converters/armatures/operators.py:49",), ()),
-        ("ja_JP", "Rigifyの呼び出しに失敗しました\nRigifyアドオンを有効にしてください.", (False, ())),
+        ("ja_JP", "Rigifyの呼び出しに失敗しました\nRigifyアドオンを有効にしてください。", (False, ())),
         ("zh_HANS", "", (False, ())),
     ),
     (

@@ -62,7 +62,7 @@ class MMDToolsAppendAddonPreferences(bpy.types.AddonPreferences):
 
     asset_extract_root_folder: bpy.props.StringProperty(
         name="Asset Extract Root Folder",
-        description="Path to extract the cached assets",
+        description="Path to extract the cached assets. It will be used as Asset Library as well",
         subtype="DIR_PATH",
         default=os.path.join(pathlib.Path.home(), "BlenderAssets"),
     )

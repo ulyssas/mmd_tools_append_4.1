@@ -16,7 +16,7 @@ from ..utilities import get_preferences, is_mmd_tools_installed, label_multiline
 from .actions import ImportActionExecutor, MessageException
 from .assets import ASSETS, AssetDescription, AssetType
 from .cache import CONTENT_CACHE, Content, Task
-from .operators import DeleteDebugAssetJson, ReloadAssetJsons, UpdateAssetJson, UpdateDebugAssetJson
+from .operators import DeleteDebugAssetJson, ReloadAssetJsons, SyncAssetLibrary, UpdateAssetJson, UpdateDebugAssetJson
 
 PREVIEWS: bpy.utils.previews.ImagePreviewCollection | None
 
@@ -439,6 +439,9 @@ class AssetsOperatorPanel(bpy.types.Panel):
         operator = box.operator(UpdateAssetJson.bl_idname, icon="TRIA_DOWN_BAR")
         operator.repo = preferences.asset_json_update_repo
         operator.query = preferences.asset_json_update_query
+
+        col.separator()
+        col.operator(SyncAssetLibrary.bl_idname, icon="FILE_REFRESH")
 
         props = context.scene.mmd_tools_append_asset_operator
 

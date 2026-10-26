@@ -435,3 +435,23 @@ class ImportActionExecutor:
                     raise MessageException(_("The file path is too long. This can be alleviated to some extent by shortening the Asset Extract Root Folder in the Add-on Preferences.")) from ex
 
             raise
+
+
+def register_drop(depsgraph: bpy.types.Depsgraph):
+    """Register drag & drop from Asset Library."""
+
+    def spawn_asset(target_obj):
+        print(f"Asset ID: {target_obj['mmd_asset_id']}")
+
+        bpy.ops.mmd_tools_append.asset_import(asset_id=target_obj["mmd_asset_id"])
+        bpy.data.objects.remove(target_obj, do_unlink=True)
+
+    for update in depsgraph.updates:
+        if not isinstance(update.id, bpy.types.Object):
+            continue
+
+        orig_obj = update.id.original
+        if "mmd_asset_id" in orig_obj and not orig_obj.get("_handled"):
+            orig_obj["_handled"] = True
+            callback = functools.partial(spawn_asset, orig_obj)
+            bpy.app.timers.register(callback, first_interval=0.05)

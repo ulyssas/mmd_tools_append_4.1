@@ -31,7 +31,7 @@ def to_human_friendly_text(number: float) -> str:
     return f"{number / 10 ** (3 * prefix_index):.2f}{SI_PREFIXES[prefix_index]}"
 
 
-def get_preferences():
+def get_preferences() -> bpy.types.AddonPreferences:
     return bpy.context.preferences.addons[__package__].preferences
 
 
